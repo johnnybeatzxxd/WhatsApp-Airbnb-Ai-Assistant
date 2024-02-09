@@ -24,7 +24,7 @@ class TelegramWebhookView(View):
         return super().dispatch(request, *args, **kwargs)
 
     
-    @bot.add_message_handler(func=lambda x:True)
+    @bot.message_handler(func=lambda x:True)
     def start(message):
         bot.reply_to(message,"👀 Sorry friend! Didn't understand that one.")
 
