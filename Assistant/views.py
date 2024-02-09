@@ -3,7 +3,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-#from pymongo import MongoClient
+import database
 import telebot
 import openai
 import datetime
@@ -31,8 +31,20 @@ class TelegramWebhookView(View):
 
     
     @bot.message_handler(func=lambda x:True)
-    def start(message):
-        bot.reply_to(message,"👀 Sorry friend! Didn't understand that one.",reply_markup=markups())
+    def chat(customer):
+        prompt = customer.text
+        first_name = customer.from_user.first_name
+        username = customer.from_user.username
+        id_ = customer.chat.id
+
+        if prompt == '💁‍♂ Reset':
+            database.reset_conversation(id_)
+
+        else:
+            database.register(id_,first_name,username)
+
+
+            bot.reply_to(message,"👀 Sorry friend! Didn't understand that one.",reply_markup=markups())
 
 
     def post(self, request):        
