@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-o#6#qi#o_y!83-n^oh=-%pxa-4)g-yz)o9rltzf-^l!98=ge&^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://airbnbassistant.onrender.com"]
 
 
 # Application definition
