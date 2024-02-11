@@ -2,7 +2,8 @@ import json
 import database
 import airbnb
 import datetime
-
+import time
+import openai
 
 function_descriptions = [
         {
@@ -90,3 +91,58 @@ function_descriptions = [
             }
             }      
 ] 
+
+
+def generate_response(messages,id_):
+    
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-1106",
+            messages=messages,
+            functions=function_descriptions,
+            function_call="auto",
+            temperature = 0.1)
+
+        print(response["choices"][0]["message"])
+    except openai.error.RateLimitError:
+        time.sleep(20)
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-1106",
+            messages=messages,
+            functions=function_descriptions,
+            function_call="auto",
+            temperature = 0.1)
+
+        print(response)
+    while response["choices"][0]["finish_reason"] == "function_call":
+        
+        function_response = function_call(response,id_)
+        #bot.send_chat_action(tg.chat.id, 'typing')
+        result = json.dumps(function_response)
+        messages.append({
+            "role": "function",
+            "name": response["choices"][0]["message"]["function_call"]["name"],
+            "content": response["choices"][0]["message"]["function_call"]['arguments']
+        })
+        messages.append({
+            "role": "function",
+            "name": response["choices"][0]["message"]["function_call"]["name"],
+            "content": function_response
+        })
+        #print(messages)
+        while True:
+            try:
+                response = openai.ChatCompletion.create( 
+                    model="gpt-3.5-turbo-1106",
+                    messages=messages,
+                    functions = function_descriptions,
+                    function_call="auto",
+                    temperature = 0.9
+                )
+                break
+            except openai.error.RateLimitError:
+                print('limit exception...')
+                time.sleep(20)
+                
+            print(response["choices"][0]["message"])
+    return response
