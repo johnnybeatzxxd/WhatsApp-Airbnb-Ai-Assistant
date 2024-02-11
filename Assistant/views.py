@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 import database
+import ai
 import telebot
 import openai
 import datetime
@@ -42,9 +43,11 @@ class TelegramWebhookView(View):
 
         else:
             database.register(id_,first_name,username)
-
-
-            bot.reply_to(message,"👀 Sorry friend! Didn't understand that one.",reply_markup=markups())
+            database.add_message(id_)
+            required_user_info = database.required_user_info()
+            response = ai.generate_response(prompt,required_user_info)
+            
+            bot.reply_to(customer,"👀 Sorry friend! Didn't understand that one.",reply_markup=markups())
 
 
     def post(self, request):        
