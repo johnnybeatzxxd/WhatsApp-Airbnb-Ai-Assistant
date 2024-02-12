@@ -210,9 +210,9 @@ def function_call(response,_id):
         except:
             return 'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.'
 
-def generate_response(messages,id_):
-    print("messages to be sent to the model",messages)
-    
+def generate_response(messages,_id):
+    print("generating answer ... ")
+    print(messages)
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
@@ -234,7 +234,7 @@ def generate_response(messages,id_):
         #print(response)
     while response["choices"][0]["finish_reason"] == "function_call":
         
-        function_response = function_call(response,id_)
+        function_response = function_call(response,_id)
         #bot.send_chat_action(tg.chat.id, 'typing')
         result = json.dumps(function_response)
         messages.append({

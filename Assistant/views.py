@@ -42,14 +42,11 @@ class TelegramWebhookView(View):
             database.reset_conversation(id_)
 
         else:
-            print("message received!")
             database.register(id_,first_name,username)
-            print("adding users message")
-            database.add_message(id_,prompt,"user")
-            print("done adding user messages")
+            conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
             print("generating answer")
-            response = ai.generate_response(prompt,required_user_info)
+            response = ai.generate_response(conversation,required_user_info)
             database.add_message(id_,response,"assistant")
             images = []
             if ai.responseType == 'image':

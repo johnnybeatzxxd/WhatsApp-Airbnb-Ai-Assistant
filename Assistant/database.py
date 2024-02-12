@@ -15,20 +15,16 @@ def reset_conversation(_id):
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":[instruction]}})
 
 def register(_id,first_name,username): 
-    print("user getting registered")
     existance = Users.find_one({"_id":int(_id)})
     if existance == None:
-        print("this user is new!")
         Users.insert_one({"_id":_id,"firstName":first_name,"userName":username,"email":"","personalName":"","conversation":[instruction]})
-    print("registration done")
+    
 def add_message(_id,message,role):
-    print("saving users message")
     conversation = Users.find_one({"_id":_id}).get("conversation")
-    print("list",conversation)
     conversation.append({"role ":role,"content":message})
-    print(conversation)
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
-    print("saving user messages done!")
+    return conversation
+  
 def required_user_info(_id): # returns user Email and Name
     required_info = {}
     email = Users.find_one({"_id":_id}).get("email")
