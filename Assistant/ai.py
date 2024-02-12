@@ -215,25 +215,15 @@ def generate_response(_id,messages,required_user_info,):
     print("generating answer ... ")
     print(messages)
     try:
-        try:
-            response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-1106",
-            messages=list(messages),
-            functions=function_descriptions,
-            function_call="auto",
-            temperature = 0.1)
-        except:
-            print('error')
-        print(response["choices"][0]["message"])
-    except openai.error.RateLimitError:
-        time.sleep(20)
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-1106",
-            messages=messages,
-            functions=function_descriptions,
-            function_call="auto",
-            temperature = 0.1)
-
+        model="gpt-3.5-turbo-1106",
+        messages=list(messages),
+        functions=function_descriptions,
+        function_call="auto",
+        temperature = 0.1)
+    except:
+        print('error')
+    print(response["choices"][0]["message"])
     print(response)
     while response["choices"][0]["finish_reason"] == "function_call":
         
