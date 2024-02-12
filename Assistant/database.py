@@ -24,7 +24,8 @@ def add_message(_id,message,role):
     print("saving users message")
     conversation = list(Users.find_one({"_id":_id})["conversation"])
     print(conversation)
-    Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation.append({"role":role,"content":message})}})
+    conversation = conversation.append({"role":role,"content":message})
+    Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
     print("saving user messages done!")
 def required_user_info(_id): # returns user Email and Name
     required_info = {}
