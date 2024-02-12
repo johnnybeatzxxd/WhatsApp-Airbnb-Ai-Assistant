@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 bot = telebot.TeleBot(os.environ.get("TelegramBotToken"))
-openai.api_key = os.environ.get('OpenAiKey')
+
 
 # Create your views here.
 def markups():
@@ -43,12 +43,27 @@ class TelegramWebhookView(View):
 
         else:
             database.register(id_,first_name,username)
-            database.add_message(id_)
+            database.add_message(id_,"user")
             required_user_info = database.required_user_info()
             response = ai.generate_response(prompt,required_user_info)
             
-            bot.reply_to(customer,"👀 Sorry friend! Didn't understand that one.",reply_markup=markups())
+            images = []
+            if ai.responseType == 'image':
+                for i in ai.random_imgs:
+                    images.append(ai.imgs[i])
+                
+                media_group = []
+                for image in images:
+                    media_group.append(telebot.types.InputMediaPhoto(image,response))
 
+                #bot.send_media_group(id_, media_group)
+                bot.send_photo(id_,images[0],caption=response)
+
+            else:
+                bot.send_message(id_,response,reply_markup=markups())
+
+
+        
 
     def post(self, request):        
         bot.process_new_updates([telebot.types.Update.de_json(request.body.decode("utf-8"))])

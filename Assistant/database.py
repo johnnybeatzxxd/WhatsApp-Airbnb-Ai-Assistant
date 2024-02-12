@@ -19,9 +19,9 @@ def register(_id,first_name,username):
     if existance == None:
         Users.insert_one({"_id":_id,"firstName":first_name,"userName":username,"email":"","personalName":"","conversation":[instruction]})
 
-def add_message(_id,message):
+def add_message(_id,message,role):
     conversation = list(Users.find_one({"_id":_id})["conversation"])
-    Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation.append(message)}})
+    Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation.append({"role":role,"content":message})}})
 
 def required_user_info(_id): # returns user Email and Name
     required_info = {}
