@@ -47,7 +47,7 @@ class TelegramWebhookView(View):
             print("adding users message")
             database.add_message(id_,prompt,"user")
             print("done adding user messages")
-            required_user_info = database.required_user_info(_id)
+            required_user_info = database.required_user_info(id_)
             print("generating answer")
             response = ai.generate_response(prompt,required_user_info)
             database.add_message(id_,response,"assistant")

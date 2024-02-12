@@ -23,9 +23,9 @@ def register(_id,first_name,username):
     print("registration done")
 def add_message(_id,message,role):
     print("saving users message")
-    conversation = list(Users.find_one({"_id":_id}).get("conversation"))
-    print(conversation)
-    conversation = conversation.append({"role":role,"content":message})
+    conversation = Users.find_one({"_id":_id}).get("conversation")
+    print("list",conversation)
+    conversation.append({"role ":role,"content":message})
     print(conversation)
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
     print("saving user messages done!")
