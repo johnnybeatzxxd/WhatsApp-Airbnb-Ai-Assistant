@@ -224,6 +224,7 @@ def generate_response(_id,messages,required_user_info,):
 
         print(response["choices"][0]["message"])
     except openai.error.RateLimitError:
+        print("exception")
         time.sleep(20)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
