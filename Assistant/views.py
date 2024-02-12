@@ -3,8 +3,8 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
-import database
-import ai
+from . import database
+from . import ai
 import telebot
 import openai
 import datetime

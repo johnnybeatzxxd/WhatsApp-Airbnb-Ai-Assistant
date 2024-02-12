@@ -1,7 +1,7 @@
 import json
 import random
-import database
-import airbnb
+from . import database
+from . import airbnb
 import datetime
 import time
 import openai
