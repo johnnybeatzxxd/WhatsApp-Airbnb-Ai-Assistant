@@ -42,6 +42,7 @@ class TelegramWebhookView(View):
             database.reset_conversation(id_)
 
         else:
+            print("message received!")
             database.register(id_,first_name,username)
             database.add_message(id_,"user")
             required_user_info = database.required_user_info()

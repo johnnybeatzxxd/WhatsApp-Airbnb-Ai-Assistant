@@ -15,11 +15,13 @@ def reset_conversation(_id):
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":[instruction]}})
 
 def register(_id,first_name,username): 
+    print("user getting registered")
     existance = Users.find_one({"_id":int(_id)})
     if existance == None:
         Users.insert_one({"_id":_id,"firstName":first_name,"userName":username,"email":"","personalName":"","conversation":[instruction]})
 
 def add_message(_id,message,role):
+    print("saving users message")
     conversation = list(Users.find_one({"_id":_id})["conversation"])
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation.append({"role":role,"content":message})}})
 

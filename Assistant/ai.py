@@ -211,7 +211,7 @@ def function_call(response,_id):
             return 'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.'
 
 def generate_response(messages,id_):
-    
+    print("generating answer")
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
