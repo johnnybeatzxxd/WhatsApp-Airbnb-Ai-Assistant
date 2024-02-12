@@ -45,7 +45,7 @@ class TelegramWebhookView(View):
             print("message received!")
             database.register(id_,first_name,username)
             print("adding users message")
-            database.add_message(id_,"user")
+            database.add_message(id_,prompt,"user")
             print("done adding user messages")
             required_user_info = database.required_user_info()
             print("generating answer")
