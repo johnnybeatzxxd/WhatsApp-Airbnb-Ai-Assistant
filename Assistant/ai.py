@@ -1,9 +1,25 @@
 import json
+import random
 import database
 import airbnb
 import datetime
 import time
 import openai
+import os
+
+
+openai.api_key = os.environ.get('OpenAiKey')
+
+today = datetime.date.today()
+year = today.year
+month = today.month
+day = today.day
+
+responseType = 'text'  
+imgs = []
+random_imgs =[]   
+
+
 
 function_descriptions = [
         {
@@ -92,6 +108,107 @@ function_descriptions = [
             }      
 ] 
 
+def image_randomizer(imgs):
+
+    def pick_random_numbers(list_of_numbers, number_of_numbers_to_pick):
+        random_numbers = []
+        picked_numbers = set()
+        for _ in range(number_of_numbers_to_pick):
+          while True:
+            random_number = random.randint(0, len(list_of_numbers) - 1)
+            if random_number not in picked_numbers:
+              break
+          picked_numbers.add(random_number)
+          random_numbers.append(list_of_numbers[random_number])
+        return random_numbers
+        
+    sequence = []
+    n = len(imgs)
+    for i in range(n):
+      sequence.append(i)
+
+    list_of_numbers = sequence
+    number_of_numbers_to_pick = 1
+    random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
+    return random_numbers
+ 
+def function_call(response,_id):
+    
+    function_call = response["choices"][0]["message"]["function_call"]
+    function_name = function_call["name"]
+    function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
+    
+    with open("properties.json", "r") as f:
+            properties = json.load(f)
+
+    if function_name == "save_user_information":
+        info = {}
+        try:
+            name = function_args["name"]
+        except:
+            info["personalName"] = ""
+        try:
+            email = function_args["email"]
+        except:
+            info["email"] = ""
+        if name == 'John Doe':
+            info["personalName"] = ""
+
+        return database.set_user_info(_id,info)
+   
+    if function_name == "get_property_info":
+        arg = function_args["information needed"]
+        
+        if arg == "price":
+
+            price = airbnb.get(query="price")
+            return f'currency = € {price}'
+
+        if arg == "availability":
+
+            availability = airbnb.get(query="availability")
+            return f'1 = available\ndate = {today}\n{availability}'
+
+        try:
+            return properties["642919"][arg]
+        except:
+            return 'Error: the information is in the description.'
+        
+    if function_name == "get_aminities_info": 
+        try:
+            aminities = function_args['aminities']
+        except:
+            aminities = "All amenities"
+        if aminities == "All amenities":
+            return str(properties['642919']['amenities'])
+        else:
+            try:
+                return str(properties['642919']['amenities'][aminities])
+            except:
+                return 'Error: amenity not found.'
+                
+    if function_name == "off_topic":
+
+        return 'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.'
+
+    if function_name == "include_image":
+        
+        global responseType
+        global imgs
+        global random_imgs
+
+        arg = function_args["image_of"]
+        responseType = 'image'
+        
+        try:
+
+            imgs = properties["642919"]['images'][arg]
+            random_imgs = image_randomizer(imgs)
+            
+            return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
+
+        except:
+            return 'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.'
 
 def generate_response(messages,id_):
     
@@ -113,7 +230,7 @@ def generate_response(messages,id_):
             function_call="auto",
             temperature = 0.1)
 
-        print(response)
+        #print(response)
     while response["choices"][0]["finish_reason"] == "function_call":
         
         function_response = function_call(response,id_)
@@ -144,5 +261,5 @@ def generate_response(messages,id_):
                 print('limit exception...')
                 time.sleep(20)
                 
-            print(response["choices"][0]["message"])
-    return response
+            #print(response["choices"][0]["message"])
+    return response["choices"][0]["message"]["content"]
