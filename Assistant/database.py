@@ -21,7 +21,7 @@ def register(_id,first_name,username):
     
 def add_message(_id,message,role):
     conversation = Users.find_one({"_id":_id}).get("conversation")
-    conversation.append({"role ":role,"content":message})
+    conversation.append({"role":role,"content":message})
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
     return conversation
   

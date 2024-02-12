@@ -217,14 +217,13 @@ def generate_response(_id,messages,required_user_info,):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
-            messages=messages,
+            messages=list(messages),
             functions=function_descriptions,
             function_call="auto",
             temperature = 0.1)
 
         print(response["choices"][0]["message"])
     except openai.error.RateLimitError:
-        print("exception")
         time.sleep(20)
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-1106",
@@ -233,7 +232,7 @@ def generate_response(_id,messages,required_user_info,):
             function_call="auto",
             temperature = 0.1)
 
-        print(response)
+    print(response)
     while response["choices"][0]["finish_reason"] == "function_call":
         
         function_response = function_call(response,_id)
