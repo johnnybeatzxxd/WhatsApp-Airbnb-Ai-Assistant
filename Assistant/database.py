@@ -18,11 +18,13 @@ def register(_id,first_name,username):
     print("user getting registered")
     existance = Users.find_one({"_id":int(_id)})
     if existance == None:
+        print("this user is new!")
         Users.insert_one({"_id":_id,"firstName":first_name,"userName":username,"email":"","personalName":"","conversation":[instruction]})
     print("registration done")
 def add_message(_id,message,role):
     print("saving users message")
-    conversation = list(Users.find_one({"_id":_id})["conversation"])
+    conversation = list(Users.find_one({"_id":_id}).get("conversation"))
+    print(conversation)
     conversation = conversation.append({"role":role,"content":message})
     print(conversation)
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
