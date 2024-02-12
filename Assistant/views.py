@@ -46,7 +46,7 @@ class TelegramWebhookView(View):
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
             print("generating answer")
-            response = ai.generate_response(conversation,required_user_info)
+            response = ai.generate_response(id_,conversation,required_user_info)
             database.add_message(id_,response,"assistant")
             images = []
             if ai.responseType == 'image':

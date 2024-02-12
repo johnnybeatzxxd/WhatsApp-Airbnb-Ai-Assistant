@@ -210,7 +210,7 @@ def function_call(response,_id):
         except:
             return 'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.'
 
-def generate_response(messages,_id):
+def generate_response(_id,messages,required_user_info,):
     print("generating answer ... ")
     print(messages)
     try:
@@ -231,7 +231,7 @@ def generate_response(messages,_id):
             function_call="auto",
             temperature = 0.1)
 
-        #print(response)
+        print(response)
     while response["choices"][0]["finish_reason"] == "function_call":
         
         function_response = function_call(response,_id)
