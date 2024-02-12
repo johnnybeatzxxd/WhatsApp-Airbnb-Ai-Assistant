@@ -23,8 +23,8 @@ def register(_id,first_name,username):
 def add_message(_id,message,role):
     print("saving users message")
     conversation = list(Users.find_one({"_id":_id})["conversation"])
-    print(conversation)
     conversation = conversation.append({"role":role,"content":message})
+    print(conversation)
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":conversation}})
     print("saving user messages done!")
 def required_user_info(_id): # returns user Email and Name
@@ -37,6 +37,7 @@ def required_user_info(_id): # returns user Email and Name
         required_info.append("email")
     if user_info["personalName"] == "":
         required_info.append("personalName")
+    print(required_info)
     return required_info
 
 def set_user_info(_id,info):
