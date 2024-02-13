@@ -113,7 +113,7 @@ class llm:
     def __init__(self):
         self.responseType = responseType
         self.imgs = imgs
-        self.random_img = random_imgs
+        self.random_imgs = random_imgs
         self.function_descriptions = function_descriptions
 
     def change_responseType(self):
