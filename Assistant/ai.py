@@ -139,7 +139,7 @@ def function_call(response,_id):
     function_name = function_call["name"]
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
-    with open("AirbnbAssistant\\Assistant\\", "r") as f:
+    with open("AirbnbAssistant\\Assistant\\properties.json", "r") as f:
             properties = json.load(f)
     
     if function_name == "save_user_information":
