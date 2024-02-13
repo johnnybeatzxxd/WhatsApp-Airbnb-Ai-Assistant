@@ -263,5 +263,5 @@ def generate_response(_id,messages,required_user_info,):
 #for testing
 print(os.getcwd())
 message = [{"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Who won the world series in 2020?"},]
+    {"role": "user", "content": "hi"},]
 generate_response(123,message,{})
