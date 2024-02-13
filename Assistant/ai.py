@@ -141,6 +141,7 @@ def function_call(response,_id):
     current_dir = os.getcwd()
     relative_path = "properties.json"
     full_path = os.path.join(current_dir, relative_path)
+    print(full_path)
     with open(full_path, "r") as f:
             properties = json.load(f)
 
