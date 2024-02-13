@@ -16,6 +16,10 @@ year = today.year
 month = today.month
 day = today.day
 
+responseType = 'text'  
+imgs = []
+random_imgs =[]   
+
 
 
 function_descriptions = [
@@ -137,10 +141,6 @@ def function_call(response,_id):
 
     with open("properties.json", "r") as f:
             properties = json.load(f)
-    
-    responseType = 'text'  
-    imgs = []
-    random_imgs =[]   
 
     if function_name == "save_user_information":
         info = {}
@@ -194,7 +194,10 @@ def function_call(response,_id):
 
     if function_name == "include_image":
         
-        
+        global responseType
+        global imgs
+        global random_imgs
+
         arg = function_args["image_of"]
         responseType = 'image'
         
@@ -210,6 +213,7 @@ def function_call(response,_id):
 
 def generate_response(_id,messages,required_user_info,):
     print("generating answer ... ")
+    responseType = 'text'
     while True:
         try:
             response = openai.ChatCompletion.create( 
@@ -254,6 +258,7 @@ def generate_response(_id,messages,required_user_info,):
                 print('limit exception...')
                 time.sleep(20)
                 
-            #print(response["choices"][0]["message"])
+           #print(response["choices"][0]["message"])
+        print(responseType);
     return response["choices"][0]["message"]["content"]
 
