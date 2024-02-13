@@ -9,7 +9,7 @@ client = MongoClient(os.environ.get("MongoConnection"))
 db = client['AirbnbAssistant']
 Users = db['Users']  
 
-instruction = {"role": "system","content": "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. call wrong_prompt function when user prompt is not related to our service and business."}
+instruction = {"role": "system","content": "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question."}
 
 def reset_conversation(_id):
     Users.update_one({"_id":int(_id)},{"$set":{"conversation":[instruction]}})
