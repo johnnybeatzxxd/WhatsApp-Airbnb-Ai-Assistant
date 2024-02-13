@@ -213,16 +213,20 @@ def function_call(response,_id):
 
 def generate_response(_id,messages,required_user_info,):
     print("generating answer ... ")
-    print(messages)
-    
-    response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo-1106",
-    messages=list(messages),
-    functions=function_descriptions,
-    function_call="auto",
-    temperature = 0.1)
-
-    print(response)
+    while True:
+        try:
+            response = openai.ChatCompletion.create( 
+                model="gpt-3.5-turbo-1106",
+                messages=messages,
+                functions = function_descriptions,
+                function_call="auto",
+                temperature = 0.9
+            )
+            break
+        except openai.error.RateLimitError:
+            print('limit exception...')
+            time.sleep(20)
+    print(response["choices"][0]["message"])
     while response["choices"][0]["finish_reason"] == "function_call":
         
         function_response = function_call(response,_id)
@@ -256,7 +260,8 @@ def generate_response(_id,messages,required_user_info,):
             #print(response["choices"][0]["message"])
     return response["choices"][0]["message"]["content"]
 
-#testing
+#for testing
+print(os.getcwd())
 message = [{"role": "system", "content": "You are a helpful assistant."},
     {"role": "user", "content": "Who won the world series in 2020?"},]
 generate_response(123,message,{})
