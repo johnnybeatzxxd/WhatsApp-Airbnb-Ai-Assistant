@@ -219,7 +219,7 @@ def generate_response(_id,messages,required_user_info,):
                 model="gpt-3.5-turbo-1106",
                 messages=messages,
                 functions = function_descriptions,
-                function_call="auto",
+                function_call="none",
                 temperature = 0.9
             )
             break
