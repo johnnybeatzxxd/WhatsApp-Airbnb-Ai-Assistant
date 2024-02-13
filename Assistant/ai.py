@@ -140,10 +140,10 @@ def function_call(response,_id):
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
     current_dir = os.getcwd()
-    relative_path = "../properties.json"
+    relative_path = "AirbnbAssistant\Assistant\properties.json"
     full_path = os.path.join(current_dir, relative_path)
     print(full_path)
-    with open(relative_path, "r") as f:
+    with open("AirbnbAssistant\Assistant\properties.json", "r") as f:
             properties = json.load(f)
     print("File loaded!")
     if function_name == "save_user_information":
