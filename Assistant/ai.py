@@ -144,7 +144,7 @@ def function_call(response,_id):
     print(full_path)
     with open(full_path, "r") as f:
             properties = json.load(f)
-
+    print(properties)
     if function_name == "save_user_information":
         info = {}
         try:
