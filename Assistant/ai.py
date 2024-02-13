@@ -16,10 +16,6 @@ year = today.year
 month = today.month
 day = today.day
 
-responseType = 'text'  
-imgs = []
-random_imgs =[]   
-
 
 
 function_descriptions = [
@@ -138,10 +134,14 @@ def function_call(response,_id):
     function_call = response["choices"][0]["message"]["function_call"]
     function_name = function_call["name"]
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
-    print("loading the file")
+
     with open("properties.json", "r") as f:
             properties = json.load(f)
-    print("File loaded!")
+    
+    responseType = 'text'  
+    imgs = []
+    random_imgs =[]   
+
     if function_name == "save_user_information":
         info = {}
         try:
@@ -194,10 +194,7 @@ def function_call(response,_id):
 
     if function_name == "include_image":
         
-        global responseType
-        global imgs
-        global random_imgs
-
+        
         arg = function_args["image_of"]
         responseType = 'image'
         
