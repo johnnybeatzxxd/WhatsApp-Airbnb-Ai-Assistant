@@ -45,26 +45,18 @@ class TelegramWebhookView(View):
             database.register(id_,first_name,username)
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
-            
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
             database.add_message(id_,response,"assistant")
             images = []
-            print("p",llm.random_imgs)
-            print("respo type -",llm.responseType)
             if llm.responseType == 'image':
-                print("sending the image ")
-                print("rando imgs",llm.random_imgs)
-                print("imgs",llm.imgs)
                 for i in llm.random_imgs:
-                    images.append(llm.imgs[i])
-                
+                    images.append(llm.imgs[i])            
                 media_group = []
                 for image in images:
                     media_group.append(telebot.types.InputMediaPhoto(image,response))
 
                 #bot.send_media_group(id_, media_group)
-                
                 bot.send_photo(id_,images[0],caption=response)
 
             else:

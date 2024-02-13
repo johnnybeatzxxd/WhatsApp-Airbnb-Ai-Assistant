@@ -138,14 +138,14 @@ class llm:
         random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
         return random_numbers
     def function_call(self,response,_id):
-        print("function calling")
+        
         function_call = response["choices"][0]["message"]["function_call"]
         function_name = function_call["name"]
         function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
         with open("properties.json", "r") as f:
                 properties = json.load(f)
-        print("json loaded")
+    
         if function_name == "save_user_information":
             info = {}
             try:
@@ -158,13 +158,10 @@ class llm:
                 info["email"] = ""
             if name == 'John Doe':
                 info["personalName"] = ""
-
             return database.set_user_info(_id,info)
     
         if function_name == "get_property_info":
             arg = function_args["information needed"]
-            print(arg,"needed")
-
             if arg == "price":
 
                 price = airbnb.get(query="price")
@@ -194,20 +191,15 @@ class llm:
                     return 'Error: amenity not found.'
 
         if function_name == "off_topic":
-
             return 'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.'
 
         if function_name == "include_image":
-            print("image needed")
-           
             arg = function_args["image_of"]
             self.responseType = 'image'
 
             try:
                 self.imgs = properties["642919"]['images'][arg]
                 self.random_imgs = self.image_randomizer(self.imgs)
-                print("random images",self.random_imgs)
-
                 return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
 
             except:
