@@ -52,7 +52,7 @@ class TelegramWebhookView(View):
             images = []
             print(llm.responseType)
             if llm.responseType == 'image':
-                print("sending the image")
+                print("sending the image ")
                 print(llm.random_imgs)
                 for i in llm.random_imgs:
                     images.append(llm.imgs[i])
