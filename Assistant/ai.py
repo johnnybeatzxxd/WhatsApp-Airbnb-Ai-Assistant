@@ -138,11 +138,8 @@ def function_call(response,_id):
     function_call = response["choices"][0]["message"]["function_call"]
     function_name = function_call["name"]
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
-
-    import sys 
-    script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
-    print(script_directory)
-    with open("AirbnbAssistant\properties.json", "r") as f:
+    print("loading the file")
+    with open("properties.json", "r") as f:
             properties = json.load(f)
     print("File loaded!")
     if function_name == "save_user_information":
@@ -263,8 +260,3 @@ def generate_response(_id,messages,required_user_info,):
             #print(response["choices"][0]["message"])
     return response["choices"][0]["message"]["content"]
 
-#for testing
-print(os.getcwd())
-message = [{"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "tell me about the location of the property"},]
-generate_response(123,message,{})
