@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from . import database
-from . import ai
+from ai import llm
 import telebot
 import openai
 import datetime
@@ -37,7 +37,7 @@ class TelegramWebhookView(View):
         first_name = customer.from_user.first_name
         username = customer.from_user.username
         id_ = customer.chat.id
-
+        
         if prompt == '💁‍♂ Reset':
             database.reset_conversation(id_)
 
@@ -45,19 +45,21 @@ class TelegramWebhookView(View):
             database.register(id_,first_name,username)
             conversation = database.add_message(id_,prompt,"user")
             required_user_info = database.required_user_info(id_)
-            print("generating answer")
-            response = ai.generate_response(id_,conversation,required_user_info)
+            
+            llm = llm()
+            response = llm.generate_response(id_,conversation,required_user_info)
             database.add_message(id_,response,"assistant")
             images = []
-            if ai.responseType == 'image':
-                for i in ai.random_imgs:
-                    images.append(ai.imgs[i])
+            if llm.responseType == 'image':
+                for i in llm.random_imgs:
+                    images.append(llm.imgs[i])
                 
                 media_group = []
                 for image in images:
                     media_group.append(telebot.types.InputMediaPhoto(image,response))
 
                 #bot.send_media_group(id_, media_group)
+                llm.change_responseType()
                 bot.send_photo(id_,images[0],caption=response)
 
             else:
