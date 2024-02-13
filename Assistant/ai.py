@@ -138,13 +138,10 @@ def function_call(response,_id):
     function_call = response["choices"][0]["message"]["function_call"]
     function_name = function_call["name"]
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
-    current_dir = os.getcwd()
-    relative_path = "properties.json"
-    full_path = os.path.join(current_dir, relative_path)
-    print(full_path)
-    with open(full_path, "r") as f:
+
+    with open("AirbnbAssistant\\Assistant\\", "r") as f:
             properties = json.load(f)
-    print(properties)
+    
     if function_name == "save_user_information":
         info = {}
         try:
