@@ -204,8 +204,8 @@ class llm:
             self.responseType = 'image'
 
             try:
-                imgs = properties["642919"]['images'][arg]
-                self.random_imgs = self.image_randomizer(imgs)
+                self.imgs = properties["642919"]['images'][arg]
+                self.random_imgs = self.image_randomizer(self.imgs)
                 print("random images",self.random_imgs)
 
                 return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
