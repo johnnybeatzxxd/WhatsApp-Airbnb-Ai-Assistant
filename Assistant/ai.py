@@ -216,6 +216,7 @@ class llm:
 
                 imgs = properties["642919"]['images'][arg]
                 random_imgs = self.image_randomizer(imgs)
+                print("random images",random_imgs)
 
                 return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
 
