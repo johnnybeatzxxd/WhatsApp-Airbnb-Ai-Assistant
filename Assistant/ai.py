@@ -142,7 +142,7 @@ def function_call(response,_id):
     import sys 
     script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
     print(script_directory)
-    with open("AirbnbAssistant\Assistant\properties.json", "r") as f:
+    with open("AirbnbAssistant\properties.json", "r") as f:
             properties = json.load(f)
     print("File loaded!")
     if function_name == "save_user_information":
