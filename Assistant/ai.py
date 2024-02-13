@@ -143,7 +143,7 @@ def function_call(response,_id):
     relative_path = "../properties.json"
     full_path = os.path.join(current_dir, relative_path)
     print(full_path)
-    with open(full_path, "r") as f:
+    with open(relative_path, "r") as f:
             properties = json.load(f)
     print("File loaded!")
     if function_name == "save_user_information":
