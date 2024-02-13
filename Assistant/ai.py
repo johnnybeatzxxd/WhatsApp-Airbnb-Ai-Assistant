@@ -140,7 +140,7 @@ def function_call(response,_id):
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
     current_dir = os.getcwd()
-    relative_path = "AirbnbAssistant/Assistant/properties.json"
+    relative_path = "../properties.json"
     full_path = os.path.join(current_dir, relative_path)
     print(full_path)
     with open(full_path, "r") as f:
