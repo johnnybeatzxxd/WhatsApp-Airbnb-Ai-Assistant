@@ -145,8 +145,8 @@ class llm:
         number_of_numbers_to_pick = 1
         random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
         return random_numbers
- 
     def function_call(self,response,_id):
+        ''''''
         print("function calling")
         function_call = response["choices"][0]["message"]["function_call"]
         function_name = function_call["name"]
@@ -213,7 +213,6 @@ class llm:
             self.responseType = 'image'
 
             try:
-
                 imgs = properties["642919"]['images'][arg]
                 random_imgs = self.image_randomizer(imgs)
                 print("random images",random_imgs)
