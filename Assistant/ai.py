@@ -139,10 +139,9 @@ def function_call(response,_id):
     function_name = function_call["name"]
     function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
-    current_dir = os.getcwd()
-    relative_path = "AirbnbAssistant\Assistant\properties.json"
-    full_path = os.path.join(current_dir, relative_path)
-    print(full_path)
+    import sys 
+    script_directory = os.path.dirname(os.path.abspath(sys.argv[0])) 
+    print(script_directory)
     with open("AirbnbAssistant\Assistant\properties.json", "r") as f:
             properties = json.load(f)
     print("File loaded!")
