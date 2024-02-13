@@ -138,7 +138,6 @@ class llm:
         random_numbers = pick_random_numbers(list_of_numbers, number_of_numbers_to_pick)
         return random_numbers
     def function_call(self,response,_id):
-        ''''''
         print("function calling")
         function_call = response["choices"][0]["message"]["function_call"]
         function_name = function_call["name"]
@@ -206,8 +205,8 @@ class llm:
 
             try:
                 imgs = properties["642919"]['images'][arg]
-                random_imgs = self.image_randomizer(imgs)
-                print("random images",random_imgs)
+                self.random_imgs = self.image_randomizer(imgs)
+                print("random images",self.random_imgs)
 
                 return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
 
