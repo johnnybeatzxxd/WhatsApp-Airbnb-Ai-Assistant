@@ -147,14 +147,14 @@ class llm:
         return random_numbers
  
     def function_call(self,response,_id):
-        
+        print("function calling")
         function_call = response["choices"][0]["message"]["function_call"]
         function_name = function_call["name"]
         function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
         with open("properties.json", "r") as f:
                 properties = json.load(f)
-
+        print("json loaded")
         if function_name == "save_user_information":
             info = {}
             try:
@@ -172,6 +172,7 @@ class llm:
     
         if function_name == "get_property_info":
             arg = function_args["information needed"]
+            print(arg,"needed")
 
             if arg == "price":
 
@@ -206,7 +207,7 @@ class llm:
             return 'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.'
 
         if function_name == "include_image":
-
+            print("image needed")
            
             arg = function_args["image_of"]
             self.responseType = 'image'
