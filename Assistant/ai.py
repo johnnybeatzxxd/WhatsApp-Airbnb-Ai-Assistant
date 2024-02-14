@@ -165,7 +165,7 @@ class llm:
             if arg == "price":
 
                 price = airbnb.get(query="price")
-                return f'currency = € {price}'
+                return f'The price for a day is €{price}'
 
             if arg == "availability":
 
