@@ -18,6 +18,6 @@ To run the AI Airbnb Chat Assistant locally, follow these steps:
 1. Clone this repository.
 2. Navigate to the project directory.
 3. Install dependencies using `pip install -r requirements.txt`.
-4. Put your openai key and mongodb server url in `.env` file.
+4. Put your telegram openai key and mongodb server url in `.env` file.
 5. Run the application using `python manage.py runserver`.
 
