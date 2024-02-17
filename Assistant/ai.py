@@ -146,7 +146,7 @@ class llm:
         function_name = function_call["name"]
         function_args = function_call["args"]
         print(type(function_args))
-        with open("AirbnbAssistant\properties.json", "r") as f:
+        with open("properties.json", "r") as f:
                 properties = json.load(f)
     
         if function_name == "save_user_information":
