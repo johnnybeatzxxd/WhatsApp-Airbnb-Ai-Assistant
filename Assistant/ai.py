@@ -142,7 +142,7 @@ class llm:
         return random_numbers
     def function_call(self,response,_id):
         
-        function_call = response["choices"][0]["message"]["function_call"]
+        function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
         function_name = function_call["name"]
         function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
 
