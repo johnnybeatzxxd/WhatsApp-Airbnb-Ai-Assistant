@@ -46,7 +46,7 @@ function_descriptions = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "off topic": {
+                    "off_topic": {
                         "type": "string",
                         "description": "true or false",
                     }
@@ -80,7 +80,7 @@ function_descriptions = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "information needed": {
+                    "information_needed": {
                         "type": "string",
                         "description": "The type of information requested. It must be one of the following: [title,description,price,availability,bedroom,location,rules,Safety & property]. Otherwise, the app will crash.",
                     },               
@@ -144,9 +144,9 @@ class llm:
         
         function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
         function_name = function_call["name"]
-        function_args = json.loads(response["choices"][0]["message"]["function_call"]["arguments"])
-
-        with open("properties.json", "r") as f:
+        function_args = function_call["args"]
+        print(type(function_args))
+        with open("AirbnbAssistant\properties.json", "r") as f:
                 properties = json.load(f)
     
         if function_name == "save_user_information":
@@ -164,7 +164,7 @@ class llm:
             return database.set_user_info(_id,info)
     
         if function_name == "get_property_info":
-            arg = function_args["information needed"]
+            arg = function_args["information_needed"]
             if arg == "price":
 
                 price = airbnb.get(query="price")
@@ -211,24 +211,31 @@ class llm:
     def generate_response(self,_id,messages,required_user_info,):
     
         data = {
-                "contents": [messages],
+                "contents": messages,
                 "tools": [{
                     "functionDeclarations": self.function_descriptions
-                    }]
-                }
+                    }],
+                "generationConfig": {
+                "temperature": 0.4,
+                "topK": 1,
+                "topP": 1,
+                "maxOutputTokens": 2048,
+                "stopSequences": []
+              },}
 
         print("generating answer ... ")
         while True:
             try:
                 response = requests.post(url, headers=headers, json=data)
                 if response.status_code == 200:
+                    response = response.json()
                     break
             except:
-                print('limit exception...')
+                print('Error')
                 time.sleep(3)
-        print(response["candidates"][0]["content"]["parts"])
+        
         while "functionCall" in response["candidates"][0]["content"]["parts"][0]:
-
+            
             function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
             function_name = function_call["name"]
 
@@ -261,9 +268,9 @@ class llm:
                 try:
                     response = requests.post(url, headers=headers, json=data)
                     if response.status_code == 200:
+                        response = response.json()
                         break
                 except:
-                    print('limit exception...')
+                    print('Error')
                     time.sleep()
-               #print(response["choices"][0]["message"])
         return response["candidates"][0]["content"]["parts"][0]["text"]
