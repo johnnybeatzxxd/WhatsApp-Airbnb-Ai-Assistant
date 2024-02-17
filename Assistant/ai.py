@@ -4,12 +4,15 @@ from . import database
 from . import airbnb
 import datetime
 import time
-import openai
+import requests
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-openai.api_key = os.environ.get('OpenAiKey')
+gemini_api_key = os.environ.get('GeminiProKey')
+url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={}".format(gemini_api_key)
+headers = {"Content-Type": "application/json",}
+
 
 today = datetime.date.today()
 year = today.year
@@ -67,7 +70,7 @@ function_descriptions = [
                 },
                 "required": ["image_of"],
             }
-            },
+        },
         
         
         
@@ -207,50 +210,60 @@ class llm:
 
     def generate_response(self,_id,messages,required_user_info,):
     
+        data = {
+                "contents": [messages],
+                "tools": [{
+                    "functionDeclarations": self.function_descriptions
+                    }]
+                }
+
         print("generating answer ... ")
         while True:
             try:
-                response = openai.ChatCompletion.create( 
-                    model="gpt-3.5-turbo-1106",
-                    messages=messages,
-                    functions = self.function_descriptions,
-                    function_call="auto",
-                    temperature = 0.9
-                )
-                break
-            except openai.error.RateLimitError:
+                response = requests.post(url, headers=headers, json=data)
+                if response.status_code == 200:
+                    break
+            except:
                 print('limit exception...')
-                time.sleep(20)
-        print(response["choices"][0]["message"])
-        while response["choices"][0]["finish_reason"] == "function_call":
+                time.sleep(3)
+        print(response["candidates"][0]["content"]["parts"])
+        while "functionCall" in response["candidates"][0]["content"]["parts"][0]:
+
+            function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
+            function_name = function_call["name"]
 
             function_response = self.function_call(response,_id)
             #bot.send_chat_action(tg.chat.id, 'typing')
+
             result = json.dumps(function_response)
             messages.append({
-                "role": "function",
-                "name": response["choices"][0]["message"]["function_call"]["name"],
-                "content": response["choices"][0]["message"]["function_call"]['arguments']
-            })
-            messages.append({
-                "role": "function",
-                "name": response["choices"][0]["message"]["function_call"]["name"],
-                "content": function_response
-            })
-            #print(messages)
+                            "role": "model",
+                            "parts":[{
+                              "functionCall": {
+                              "name": function_name,
+                              "args": function_call["args"]
+                                                }             
+                                    }]
+                            },)
+            messages.append({"role": "function",
+                            "parts":[{
+                                "functionResponse":{
+                                    "name": function_name,
+                                    "response":{
+                                        "name": function_name,
+                                        "content": function_response
+                                                }
+                                                    }  
+                                    }]
+                            })
+            
             while True:
                 try:
-                    response = openai.ChatCompletion.create( 
-                        model="gpt-3.5-turbo-1106",
-                        messages=messages,
-                        functions = self.function_descriptions,
-                        function_call="auto",
-                        temperature = 0.9
-                    )
-                    break
-                except openai.error.RateLimitError:
+                    response = requests.post(url, headers=headers, json=data)
+                    if response.status_code == 200:
+                        break
+                except:
                     print('limit exception...')
-                    time.sleep(20)
-
+                    time.sleep()
                #print(response["choices"][0]["message"])
-        return response["choices"][0]["message"]["content"]
+        return response["candidates"][0]["content"]["parts"][0]["text"]
