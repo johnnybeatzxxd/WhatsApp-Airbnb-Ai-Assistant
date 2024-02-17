@@ -216,7 +216,7 @@ class llm:
                     "functionDeclarations": self.function_descriptions
                     }],
                 "generationConfig": {
-                "temperature": 0.4,
+                "temperature": 0.1,
                 "topK": 1,
                 "topP": 1,
                 "maxOutputTokens": 2048,
