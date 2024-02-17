@@ -47,7 +47,7 @@ class TelegramWebhookView(View):
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
-            database.add_message(id_,response,"assistant")
+            database.add_message(id_,response,"model")
             images = []
             if llm.responseType == 'image':
                 for i in llm.random_imgs:
