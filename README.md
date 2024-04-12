@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 # Airbnb-Ai-Assistant-bot
-=======
+
 # Ai Airbnb Assistant Chatbot
 
 ## This Chatbot is designed for Aribnb property owners to streamline communication with guests.
@@ -23,4 +22,3 @@ To run the AI Airbnb Chat Assistant locally, follow these steps:
 3. Install dependencies using `pip install -r requirements.txt`.
 4.Run the application using `python manage.py runserver`.
 
->>>>>>> 766fe8d (README file and chat screenshots added)
