@@ -9,8 +9,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-gemini_api_key = os.environ.get('GeminiProKey')
-url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={}".format(gemini_api_key)
+gemini_api_key = "AIzaSyD5euDjhxuvmStcL-XQrf1GRp3s5a_6Q9Y"
+url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key={}".format(gemini_api_key)
 headers = {"Content-Type": "application/json",}
 
 
