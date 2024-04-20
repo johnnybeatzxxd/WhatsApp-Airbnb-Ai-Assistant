@@ -212,6 +212,7 @@ class llm:
     
         data = {
                 "contents": messages,
+                "system_instruction": "your name is Jo you are 21 years old",
                 "tools": [{
                     "functionDeclarations": self.function_descriptions
                     }],
