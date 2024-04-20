@@ -9,7 +9,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-gemini_api_key = "AIzaSyD5euDjhxuvmStcL-XQrf1GRp3s5a_6Q9Y"
+gemini_api_key = os.environ.get('GeminiProKey')
 url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key={}".format(gemini_api_key)
 headers = {"Content-Type": "application/json",}
 
@@ -230,6 +230,8 @@ class llm:
                 if response.status_code == 200:
                     response = response.json()
                     break
+                   
+                 
             except:
                 print('Error')
                 time.sleep(3)
