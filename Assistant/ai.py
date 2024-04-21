@@ -229,7 +229,8 @@ class llm:
                 "topK": 1,
                 "topP": 1,
                 "maxOutputTokens": 2048,
-                "stopSequences": []
+                "stopSequences": [],
+                'safety_settings': [{"category":"HARM_CATEGORY_DEROGATORY","threshold":4},{"category":"HARM_CATEGORY_TOXICITY","threshold":4},{"category":"HARM_CATEGORY_VIOLENCE","threshold":4},{"category":"HARM_CATEGORY_SEXUAL","threshold":4},{"category":"HARM_CATEGORY_MEDICAL","threshold":4},{"category":"HARM_CATEGORY_DANGEROUS","threshold":4}]
               },}
 
         print("generating answer ... ")
