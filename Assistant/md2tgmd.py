@@ -83,8 +83,8 @@ def escape(text, flag=0):
     text = re.sub(r"\|", '\|', text)
     text = re.sub(r"{", '\{', text)
     text = re.sub(r"}", '\}', text)
-    # text = re.sub(r"\.", '\.', text)
-    # text = re.sub(r"!", '\!', text)
+    text = re.sub(r"\.", '\.', text)
+    text = re.sub(r"!", '\!', text)
     # Escape periods
     # text = re.sub(r"\.", '\.', text) 
     # text = re.sub(r"!", '\!', text)
