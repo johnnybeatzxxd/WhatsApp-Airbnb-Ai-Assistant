@@ -6,6 +6,7 @@ import datetime
 import time
 import requests
 import os
+import base64
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -117,6 +118,17 @@ class llm:
         self.function_descriptions = function_descriptions
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
 
+    def get_base64_encoded_image(image_url):
+        # Send a GET request to fetch the image at the URL
+        response = requests.get(image_url)
+        # Ensure the request was successful
+        if response.status_code == 200:
+            # Encode the binary content of the image
+            encoded_image = base64.b64encode(response.content)
+            # Decode the bytes to a string
+            return encoded_image.decode('utf-8')
+        else:
+            return "Failed to fetch image"
 
     def image_randomizer(self,imgs):
     
@@ -160,26 +172,27 @@ class llm:
                 email = function_args["email"]
             except:
                 info["email"] = ""
-            if name == 'John Doe':
-                info["personalName"] = ""
-            return database.set_user_info(_id,info)
+            
+            return {"function_response":database.set_user_info(_id,info),"image":None}
     
         if function_name == "get_property_info":
             arg = function_args["information_needed"]
             if arg == "price":
 
                 price = airbnb.get(query="price")
-                return f'The price for a day is €{price}'
-
+                return {"function_response": f'The price for a day is €{price}',"image":None}
+                
             if arg == "availability":
 
                 availability = airbnb.get(query="availability")
-                return f'1 = available\ndate = {today}\n{availability}'
+                return {"function_response":f'1 = available\ndate = {today}\n{availability}',"image":None}
 
             try:
-                return properties["642919"][arg]
+                return {"function_response": properties["642919"][arg],"image":None}
+                
             except:
-                return 'Error: the information is in the description.'
+                return {"function_response": 'Error: the information is in the description.',"image":None}
+               
 
         if function_name == "get_aminities_info": 
             try:
@@ -187,15 +200,18 @@ class llm:
             except:
                 aminities = "All amenities"
             if aminities == "All amenities":
-                return str(properties['642919']['amenities'])
+                return {"function_response":str(properties['642919']['amenities']),"image":None}
+                
             else:
                 try:
-                    return str(properties['642919']['amenities'][aminities])
+                    return {"function_response":str(properties['642919']['amenities'][aminities]),"image":None}
+                    
                 except:
-                    return 'Error: amenity not found.'
+                    return {"function_response":'Error: amenity not found.',"image":None}
+                    
 
         if function_name == "off_topic":
-            return 'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.'
+            return {"function_response":'you should only assist the user with only our property and business realted question.so dont assist! tell them to google it or somthing.',"image":None}
 
         if function_name == "include_image":
             arg = function_args["image_of"]
@@ -204,10 +220,16 @@ class llm:
             try:
                 self.imgs = properties["642919"]['images'][arg]
                 self.random_imgs = self.image_randomizer(self.imgs)
-                return f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.'
+                image = self.imgs[self.random_imgs[0]]
+                print(image)
+                encoded_image = self.get_base64_encoded_image(image)
+                if encoded_image == "Failed to fetch image":
+                    encoded_image = None
+                return {"function_response":f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
 
             except:
-                return 'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.'
+                 return {"function_response":'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.',"image":None}
+
 
     def generate_response(self,_id,messages,required_user_info,):
     
@@ -252,6 +274,8 @@ class llm:
             function_name = function_call["name"]
 
             function_response = self.function_call(response,_id)
+            function_response_message = function_response["function_response"]
+            function_response_image = function_response["image"]
             #bot.send_chat_action(tg.chat.id, 'typing')
 
             result = json.dumps(function_response)
@@ -266,12 +290,23 @@ class llm:
                                     "name": function_name,
                                     "response":{
                                         "name": function_name,
-                                        "content": function_response
+                                        "content": function_response_message
                                                 }
                                                     }  
                                     },
                                     {"text": "here is the image sent to the user describe it well"},
                                     ]
+            if function_response_image != None:
+                functionResponse.extend([
+                    {"text": "here is the image sent to the user describe it well"},
+                    {
+                    "inlineData": {
+                        "mimeType": "image/png",
+                        "data": function_response_image,
+                        }
+                    },
+                    ])
+                
             messages.append({
                             "role": "model",
                             "parts": function
