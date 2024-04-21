@@ -67,7 +67,7 @@ class TelegramWebhookView(View):
         username = customer.from_user.username
         id_ = customer.chat.id
         
-        if prompt == '💁‍♂ Reset':
+        if prompt[0]["text"] == '💁‍♂ Reset':
             database.reset_conversation(id_)
 
         else:
