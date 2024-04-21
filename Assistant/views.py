@@ -10,7 +10,7 @@ import openai
 import datetime
 import os
 import time
-from md2tgmd import escape
+from . import md2tgmd
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,7 +47,7 @@ class TelegramWebhookView(View):
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
-            escaped_response = escape(response)
+            escaped_response = md2tgmd.escape(response)
             database.add_message(id_,escaped_response,"model")
             images = []
             if llm.responseType == 'image':
