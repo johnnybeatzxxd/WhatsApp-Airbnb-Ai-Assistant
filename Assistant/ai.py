@@ -120,7 +120,9 @@ class llm:
 
     def get_base64_encoded_image(image_url):
         # Send a GET request to fetch the image at the URL
+        print(image_url)
         response = requests.get(image_url)
+        
         # Ensure the request was successful
         if response.status_code == 200:
             # Encode the binary content of the image
@@ -223,6 +225,7 @@ class llm:
                 image = self.imgs[self.random_imgs[0]]
                 print(image)
                 encoded_image = self.get_base64_encoded_image(image)
+                print(encoded_image)
                 if encoded_image == "Failed to fetch image":
                     encoded_image = None
                 return {"function_response":f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
