@@ -115,6 +115,7 @@ class llm:
         self.imgs = []
         self.random_imgs = []
         self.function_descriptions = function_descriptions
+        self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to install requerments of script thats in text file','how to be good sells man?','how is a car made','how to cook a piza','whats inside car engine','What has a mouth but never speaks?' you should say 'you should only assist the user with only our property and business related question.so dont assist! tell them to google it or somthing. '"
 
 
     def image_randomizer(self,imgs):
@@ -215,6 +216,14 @@ class llm:
                 "tools": [{
                     "functionDeclarations": self.function_descriptions
                     }],
+                "system_instruction": {
+                      "parts": [
+                        {
+                          "text": self.instruction
+                        }, 
+                      ],
+                      "role": "system" 
+                    },
                 "generationConfig": {
                 "temperature": 0.1,
                 "topK": 1,
