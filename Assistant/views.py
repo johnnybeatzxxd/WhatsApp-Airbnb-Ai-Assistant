@@ -11,6 +11,7 @@ import datetime
 import os
 import time
 import base64
+import io  # Import the io module
 from . import md2tgmd
 from dotenv import load_dotenv
 
@@ -43,15 +44,15 @@ class TelegramWebhookView(View):
             for photo in customer.photo:
                 raw = photo.file_id  # Get the file_id of the photo
                 print("id",raw)
-                path = f"{customer.chat.id}_{raw}.jpg"  # Set a unique path for each photo
                 file_info = bot.get_file(raw)
                 print(file_info)  # Get the File object
                 downloaded_file = bot.download_file(file_info.file_path)
-                print(downloaded_file)
                 print("passed")
-                with open(path, "rb") as f:
-                    image_data = base64.b64encode(f.read()).decode('utf-8')
-                prompt.append( {
+                # Use BytesIO to handle the image data in memory
+                image_stream = io.BytesIO(downloaded_file)
+                image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+                print(image_data)
+                prompt.append({
                     "inlineData": {
                         "mimeType": "image/png",
                         "data": image_data
