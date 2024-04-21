@@ -10,6 +10,7 @@ import openai
 import datetime
 import os
 import time
+import base64
 from . import md2tgmd
 from dotenv import load_dotenv
 
@@ -31,9 +32,32 @@ class TelegramWebhookView(View):
         return super().dispatch(request, *args, **kwargs)
 
     
-    @bot.message_handler(func=lambda x:True)
+    @bot.message_handler(content_types=['text', 'photo'])
     def chat(customer):
-        prompt = customer.text
+        if customer.content_type == "photo":
+            caption = customer.caption
+            bot.send_chat_action(customer.chat.id, 'typing')
+            prompt = [
+                {"text": caption},  
+            ]
+            for photo in customer.photo:
+                raw = photo.file_id  # Get the file_id of the photo
+                path = f"{customer.chat.id}_{raw}.jpg"  # Set a unique path for each photo
+                file_info = bot.get_file(raw)  # Get the File object
+                downloaded_file = bot.download_file(file_info.file_path)
+                with open(path, "rb") as f:
+                    image_data = base64.b64encode(f.read()).decode('utf-8')
+                prompt.append( {
+                    "inlineData": {
+                        "mimeType": "image/png",
+                        "data": image_data
+                    }
+                })
+        if customer.content_type == "text":
+            prompt = [
+                {"text": customer.text},  
+            ]
+
         first_name = customer.from_user.first_name
         username = customer.from_user.username
         id_ = customer.chat.id
