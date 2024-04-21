@@ -281,7 +281,7 @@ class llm:
             function_response = self.function_call(response,_id)
             function_response_message = function_response["function_response"]
             function_response_image = function_response["image"]
-            print(function_response_image)
+            
             #bot.send_chat_action(tg.chat.id, 'typing')
 
             result = json.dumps(function_response)
@@ -311,7 +311,8 @@ class llm:
                         }
                         }
                     )
-                
+            database.add_message(_id,function,"model")
+            database.add_message(_id,functionResponse,"function")   
             messages.append({
                             "role": "model",
                             "parts": function
@@ -330,7 +331,6 @@ class llm:
                 except:
                     print('Error')
                     time.sleep(5)
-            database.add_message(_id,function,"model")
-            database.add_message(_id,functionResponse,"function")
+            
             print(response["candidates"][0]["content"]["parts"][0]["text"])
         return response["candidates"][0]["content"]["parts"][0]["text"]
