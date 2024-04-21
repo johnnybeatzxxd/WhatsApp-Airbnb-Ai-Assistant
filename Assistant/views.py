@@ -65,11 +65,11 @@ class TelegramWebhookView(View):
 
                 #bot.send_media_group(id_, media_group)
                 print(escaped_response)
-                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='MarkdownV2')
+                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='HTML')
 
             else:
                 print(escaped_response)
-                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='MarkdownV2')
+                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
 
 
         
