@@ -239,6 +239,7 @@ class llm:
                 if response.status_code == 200:
                     response = response.json()
                     break
+                print("Error")
             except:
                 print('Error')
                 time.sleep(3)
