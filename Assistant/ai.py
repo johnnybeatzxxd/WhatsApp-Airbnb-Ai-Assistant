@@ -119,7 +119,7 @@ class llm:
         self.function_descriptions = function_descriptions
         self.instruction = "you are help full assistant. you assist our customers by answering questions about our property we have on airbnb. you only assist users with only our property and business realted question. if the user prompt is not related to our service and business. eg. 'how to be good sells man?','how is a car made','how to cook a pizza' dont assist! tell them to google it or somthing. '"
 
-    def get_base64_encoded_image(image_url):
+    def get_base64_encoded_image(self,image_url):
         # Send a GET request to fetch the image at the URL
         print(image_url)
         response = requests.get(image_url)
