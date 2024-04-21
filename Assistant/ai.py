@@ -276,6 +276,7 @@ class llm:
             function_response = self.function_call(response,_id)
             function_response_message = function_response["function_response"]
             function_response_image = function_response["image"]
+            print(function_response_image)
             #bot.send_chat_action(tg.chat.id, 'typing')
 
             result = json.dumps(function_response)
