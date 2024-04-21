@@ -57,10 +57,10 @@ class TelegramWebhookView(View):
                     media_group.append(telebot.types.InputMediaPhoto(image,response))
 
                 #bot.send_media_group(id_, media_group)
-                bot.send_photo(id_, images[0], caption=response, parse_mode='MarkdownV2')
+                bot.send_photo(id_, images[0], caption=response, parse_mode='Markdown')
 
             else:
-                bot.send_message(id_, response, reply_markup=markups(), parse_mode='MarkdownV2')
+                bot.send_message(id_, response, reply_markup=markups(), parse_mode='Markdown')
 
 
         
