@@ -41,23 +41,23 @@ class TelegramWebhookView(View):
             prompt = [
                 {"text": caption},  
             ]
-            for photo in customer.photo:
-                raw = photo.file_id  # Get the file_id of the photo
-                print("id",raw)
-                file_info = bot.get_file(raw)
-                print(file_info)  # Get the File object
-                downloaded_file = bot.download_file(file_info.file_path)
-                print("passed")
-                # Use BytesIO to handle the image data in memory
-                image_stream = io.BytesIO(downloaded_file)
-                image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
-                print(image_data)
-                prompt.append({
-                    "inlineData": {
-                        "mimeType": "image/png",
-                        "data": image_data
-                    }
-                })
+            photo = customer.photo[-1]
+            raw = photo.file_id  # Get the file_id of the photo
+            print("id",raw)
+            file_info = bot.get_file(raw)
+            print(file_info)  # Get the File object
+            downloaded_file = bot.download_file(file_info.file_path)
+            print("passed")
+            # Use BytesIO to handle the image data in memory
+            image_stream = io.BytesIO(downloaded_file)
+            image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+            print(image_data)
+            prompt.append({
+                "inlineData": {
+                    "mimeType": "image/png",
+                    "data": image_data
+                }
+            })
         if customer.content_type == "text":
             prompt = [
                 {"text": customer.text},  
