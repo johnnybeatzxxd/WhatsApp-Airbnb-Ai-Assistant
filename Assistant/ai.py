@@ -233,7 +233,7 @@ class llm:
               },}
 
         print("generating answer ... ")
-        while True:
+        for _ in range(5):
             try:
                 response = requests.post(url, headers=headers, json=data)
                 if response.status_code == 200:
