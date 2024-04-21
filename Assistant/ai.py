@@ -238,6 +238,7 @@ class llm:
                 response = requests.post(url, headers=headers, json=data)
                 if response.status_code == 200:
                     response = response.json()
+                    print(response)
                     break
                 print("Error")
             except:
