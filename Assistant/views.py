@@ -42,9 +42,13 @@ class TelegramWebhookView(View):
             ]
             for photo in customer.photo:
                 raw = photo.file_id  # Get the file_id of the photo
+                print("id",raw)
                 path = f"{customer.chat.id}_{raw}.jpg"  # Set a unique path for each photo
-                file_info = bot.get_file(raw)  # Get the File object
+                file_info = bot.get_file(raw)
+                print(file_info)  # Get the File object
                 downloaded_file = bot.download_file(file_info.file_path)
+                print(downloaded_file)
+                print("passed")
                 with open(path, "rb") as f:
                     image_data = base64.b64encode(f.read()).decode('utf-8')
                 prompt.append( {
