@@ -302,7 +302,7 @@ class llm:
                                                 }
                                                     }  
                                     },
-                                    {"text": "here is the image sent to the user describe it well"},
+                                    {"text": "here is the image sent to the user"},
                                     ]
             if function_response_image != None:
                 functionResponse.append({
