@@ -24,6 +24,12 @@ def markups():
     markup.add(reset)
     return markup
 
+def escape_markdown_v2(text):
+    # Characters to be escaped in MarkdownV2
+    escape_chars = '_*[]()~`>#+-=|{}.!'
+    # Escaping each character that needs it
+    return ''.join(f'\\{char}' if char in escape_chars else char for char in text)
+
 class TelegramWebhookView(View):
     
     @method_decorator(csrf_exempt)
@@ -47,22 +53,23 @@ class TelegramWebhookView(View):
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
-            database.add_message(id_,response,"model")
+            escaped_response = escape_markdown_v2(response)
+            database.add_message(id_,escaped_response,"model")
             images = []
             if llm.responseType == 'image':
                 for i in llm.random_imgs:
                     images.append(llm.imgs[i])            
                 media_group = []
                 for image in images:
-                    media_group.append(telebot.types.InputMediaPhoto(image,response))
+                    media_group.append(telebot.types.InputMediaPhoto(image,escaped_response))
 
                 #bot.send_media_group(id_, media_group)
-                print(response)
-                bot.send_photo(id_, images[0], caption=response, parse_mode='Markdown')
+                print(escaped_response)
+                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='MarkdownV2')
 
             else:
-                print(response)
-                bot.send_message(id_, response, reply_markup=markups(), parse_mode='Markdown')
+                print(escaped_response)
+                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='MarkdownV2')
 
 
         
