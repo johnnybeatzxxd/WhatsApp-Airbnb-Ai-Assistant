@@ -302,9 +302,10 @@ class llm:
                                                 }
                                                     }  
                                     },
-                                    {"text": "here is the image sent to the user"},
+                                    
                                     ]
             if function_response_image != None:
+                functionResponse.append({"text": "here is the image sent to the user"},)
                 functionResponse.append({
                     "inlineData": {
                         "mimeType": "image/png",
