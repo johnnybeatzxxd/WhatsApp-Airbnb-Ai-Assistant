@@ -274,7 +274,7 @@ class llm:
                                                 }
                                                     }  
                                     },
-                                    {"text": "can you show me what your house look like "},
+                                    {"text": "RESPOND WITH CAPITAL LETTERS!"},
                                     # {
                                     #     "inlineData": {
                                     #         "mimeType": "image/png",
