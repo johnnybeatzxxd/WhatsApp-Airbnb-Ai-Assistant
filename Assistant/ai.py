@@ -8,6 +8,7 @@ import requests
 import os
 import base64
 from dotenv import load_dotenv
+import traceback
 load_dotenv()
 
 gemini_api_key = os.environ.get('GeminiProKey')
@@ -223,15 +224,18 @@ class llm:
                 self.imgs = properties["642919"]['images'][arg]
                 self.random_imgs = self.image_randomizer(self.imgs)
                 image = self.imgs[self.random_imgs[0]]
-                print(image)
+                print("image",image)
                 encoded_image = self.get_base64_encoded_image(image)
                 print(encoded_image)
                 if encoded_image == "Failed to fetch image":
                     encoded_image = None
                 return {"function_response":f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
 
-            except:
-                 return {"function_response":'image not found with this argument please use one of them [outdoor,house,bedroom,bathroom] if it doesnt match you can just pass.',"image":None}
+            except Exception as e:
+                print(f"An error occurred: {str(e)}")
+                traceback.print_exc()
+                self.responseType = 'text'
+                return {"function_response":'image not found with this argument please use one of them [outdoor, house, bedroom, bathroom]. If it doesn\'t match you can just pass.',"image":None}
 
 
     def generate_response(self,_id,messages,required_user_info,):
@@ -301,15 +305,13 @@ class llm:
                                     {"text": "here is the image sent to the user describe it well"},
                                     ]
             if function_response_image != None:
-                functionResponse.extend([
-                    {"text": "here is the image sent to the user describe it well"},
-                    {
+                functionResponse.append({
                     "inlineData": {
                         "mimeType": "image/png",
                         "data": function_response_image,
                         }
-                    },
-                    ])
+                        }
+                    )
                 
             messages.append({
                             "role": "model",
