@@ -78,7 +78,7 @@ class TelegramWebhookView(View):
             response = llm.generate_response(id_,conversation,required_user_info)
             escaped_response = md2tgmd.escape(response) 
             response = [
-                {"text": md2tgmd.escape(response)},  
+                {"text": escaped_response},  
             ] 
             database.add_message(id_,response,"model")
             images = []

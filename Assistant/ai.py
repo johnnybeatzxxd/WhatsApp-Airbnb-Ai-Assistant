@@ -121,7 +121,6 @@ class llm:
 
     def get_base64_encoded_image(self,image_url):
         # Send a GET request to fetch the image at the URL
-        print(image_url)
         response = requests.get(image_url)
         
         # Ensure the request was successful
@@ -226,7 +225,6 @@ class llm:
                 image = self.imgs[self.random_imgs[0]]
                 print("image",image)
                 encoded_image = self.get_base64_encoded_image(image)
-                print(encoded_image)
                 if encoded_image == "Failed to fetch image":
                     encoded_image = None
                 return {"function_response":f'image of {arg} will be sent with your reponses.dont say "I am currently unable to send images." so pretend like you sent the image.',"image":encoded_image}
@@ -334,4 +332,5 @@ class llm:
                     time.sleep(5)
             database.add_message(_id,function,"model")
             database.add_message(_id,functionResponse,"function")
+            print(response["candidates"][0]["content"]["parts"][0]["text"])
         return response["candidates"][0]["content"]["parts"][0]["text"]
