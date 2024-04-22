@@ -38,9 +38,7 @@ class TelegramWebhookView(View):
         if customer.content_type == "photo":
             caption = customer.caption
             bot.send_chat_action(customer.chat.id, 'typing')
-            prompt = [
-                {"text": caption},  
-            ]
+            prompt = []
             photo = customer.photo[-1]
             raw = photo.file_id  # Get the file_id of the photo
             print("id",raw)
@@ -52,6 +50,8 @@ class TelegramWebhookView(View):
             image_stream = io.BytesIO(downloaded_file)
             image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
             print(image_data)
+            if caption != None:
+                prompt.append({"text": caption},)
             prompt.append({
                 "inlineData": {
                     "mimeType": "image/png",
