@@ -95,8 +95,9 @@ class TelegramWebhookView(View):
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
-            escaped_response = markdown.markdown(response)
             print(response)
+            escaped_response = markdown.markdown(response)
+            #print(response)
             response = [
                 {"text": response},  
             ] 
