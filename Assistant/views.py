@@ -95,7 +95,7 @@ class TelegramWebhookView(View):
 
             else:
                 print(escaped_response)
-                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
+                bot.send_message(id_, "<b>bold</b>", reply_markup=markups(), parse_mode='HTML')
 
 
         
