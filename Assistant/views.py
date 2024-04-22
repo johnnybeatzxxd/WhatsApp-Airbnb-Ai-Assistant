@@ -14,11 +14,30 @@ import base64
 import io  # Import the io module
 import markdown
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
 bot = telebot.TeleBot(os.environ.get("TelegramBotToken"))
 
+
+
+def remove_unsupported_tags(html_string):
+
+  supported_tags = ["b", "strong", "i", "em", "a", "code", "pre"]
+  
+  pattern = r"<[^>]+>" 
+  
+  def replace_tag(match):
+    tag = match.group(0)
+    
+    if any(tag.startswith(f"<{supported_tag}") or tag.startswith(f"</{supported_tag}") for supported_tag in supported_tags):
+      return tag  
+    else:
+      return ""  
+  
+  clean_string = re.sub(pattern, replace_tag, html_string)
+  return clean_string
 
 # Create your views here.
 def markups():
@@ -90,12 +109,14 @@ class TelegramWebhookView(View):
                     media_group.append(telebot.types.InputMediaPhoto(image,escaped_response))
 
                 #bot.send_media_group(id_, media_group)
+                escaped_response = remove_unsupported_tags(escaped_response)
                 print(escaped_response)
                 bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='HTML')
 
             else:
+                escaped_response = remove_unsupported_tags(escaped_response)
                 print(escaped_response)
-                bot.send_message(id_, "<b>bold</b>", reply_markup=markups(), parse_mode='HTML')
+                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
 
 
         
