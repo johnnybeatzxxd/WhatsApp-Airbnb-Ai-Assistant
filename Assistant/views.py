@@ -26,15 +26,24 @@ def remove_unsupported_tags(html_string):
 
   supported_tags = ["b", "strong", "i", "em", "a", "code", "pre"]
   
+  tag_mapping = {
+      "p": "b",  # Map <p> tag to <b>
+      # Add more tag mappings as needed
+  }
+  
   pattern = r"<[^>]+>" 
   
   def replace_tag(match):
     tag = match.group(0)
     
     if any(tag.startswith(f"<{supported_tag}") or tag.startswith(f"</{supported_tag}") for supported_tag in supported_tags):
-      return tag  
+      return tag
     else:
-      return ""  
+      tag_name = tag[1:-1].split()[0]  # Extract tag name
+      if tag_name in tag_mapping:
+          return f"<{tag_mapping[tag_name]}>"
+      else:
+          return ""
   
   clean_string = re.sub(pattern, replace_tag, html_string)
   return clean_string
