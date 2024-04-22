@@ -12,7 +12,7 @@ import os
 import time
 import base64
 import io  # Import the io module
-from . import md2tgmd
+import markdown
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -37,19 +37,19 @@ class TelegramWebhookView(View):
     def chat(customer):
         if customer.content_type == "photo":
             caption = customer.caption
+            print(caption)
             bot.send_chat_action(customer.chat.id, 'typing')
             prompt = []
             photo = customer.photo[-1]
             raw = photo.file_id  # Get the file_id of the photo
-            print("id",raw)
             file_info = bot.get_file(raw)
             print(file_info)  # Get the File object
             downloaded_file = bot.download_file(file_info.file_path)
-            print("passed")
+            
             # Use BytesIO to handle the image data in memory
             image_stream = io.BytesIO(downloaded_file)
             image_data = base64.b64encode(image_stream.getvalue()).decode('utf-8')
-            print(image_data)
+            
             if caption != None:
                 prompt.append({"text": caption},)
             prompt.append({
@@ -67,7 +67,7 @@ class TelegramWebhookView(View):
         username = customer.from_user.username
         id_ = customer.chat.id
         
-        if prompt[0]["text"] == '💁‍♂ Reset':
+        if customer.content_type == "text" and prompt[0]["text"] == '💁‍♂ Reset':
             database.reset_conversation(id_)
 
         else:
@@ -76,7 +76,7 @@ class TelegramWebhookView(View):
             required_user_info = database.required_user_info(id_)
             llm = ai.llm()
             response = llm.generate_response(id_,conversation,required_user_info)
-            escaped_response = md2tgmd.escape(response) 
+            escaped_response = markdown.markdown(response)
             response = [
                 {"text": escaped_response},  
             ] 
@@ -91,11 +91,11 @@ class TelegramWebhookView(View):
 
                 #bot.send_media_group(id_, media_group)
                 print(escaped_response)
-                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='MarkdownV2')
+                bot.send_photo(id_, images[0], caption=escaped_response, parse_mode='HTML')
 
             else:
                 print(escaped_response)
-                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='MarkdownV2')
+                bot.send_message(id_, escaped_response, reply_markup=markups(), parse_mode='HTML')
 
 
         
