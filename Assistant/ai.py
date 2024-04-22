@@ -303,7 +303,7 @@ class llm:
                                     
                                     ]
             if function_response_image != None:
-                functionResponse.append({"text": "here is the image sent to the user"},)
+                functionResponse.append({"text": "here is the image sent to the user describe it well."},)
                 functionResponse.append({
                     "inlineData": {
                         "mimeType": "image/png",
@@ -332,5 +332,5 @@ class llm:
                     print('Error')
                     time.sleep(5)
             
-            print(response["candidates"][0]["content"]["parts"][0]["text"])
+        print(response["candidates"][0]["content"]["parts"][0]["text"])
         return response["candidates"][0]["content"]["parts"][0]["text"]
