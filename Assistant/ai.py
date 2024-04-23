@@ -362,6 +362,7 @@ class llm:
                         else:
                             print("Empty JSON response received, retrying...")
                             functionResponse = functionResponse.append({"text": "please generate a response"})
+                            print(functionResponse)
                             messages[-1]["parts"] = functionResponse
                             print(messages[-1])
                     else:
