@@ -363,7 +363,7 @@ class llm:
                             print("Empty JSON response received, retrying...")
                             functionResponse = functionResponse.append({"text": "please generate a response"})
                             messages[-1]["parts"] = functionResponse
-                            print(data)
+                            print(messages[-1])
                     else:
                         print(f"Received non-200 status code: {response.status_code}")
                     
