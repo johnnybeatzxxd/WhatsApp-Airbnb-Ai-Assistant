@@ -281,17 +281,26 @@ class llm:
               },}
 
         print("generating answer ... ")
-        for _ in range(5):
+        while True:
             try:
+                print("Executing request...")
                 response = requests.post(url, headers=headers, json=data)
+                print(f"Status Code: {response.status_code}, Response Body: {response.text}")
+                
                 if response.status_code == 200:
-                    response = response.json()
-                    print(response)
-                    break
-                print("Error")
-            except:
-                print('Error')
-                time.sleep(3)
+                    response_data = response.json()
+                    if response_data:
+                        print("Valid response received:", response_data)
+                        break
+                    else:
+                        print("Empty JSON response received, retrying...")
+                else:
+                    print(f"Received non-200 status code: {response.status_code}")
+                
+                time.sleep(5)
+            except requests.exceptions.RequestException as e:
+                print(f'Request failed: {e}, retrying...')
+                time.sleep(5)
         
         while "functionCall" in response["candidates"][0]["content"]["parts"][0]:
             
@@ -342,18 +351,23 @@ class llm:
                                 }) 
             while True:
                 try:
-                    print("excution")
+                    print("Executing request...")
                     response = requests.post(url, headers=headers, json=data)
+                    print(f"Status Code: {response.status_code}, Response Body: {response.text}")
+                    
                     if response.status_code == 200:
-                        response = response.json()
-                        print(response)
-                        
-                        if response != {}:
+                        response_data = response.json()
+                        if response_data:
+                            print("Valid response received:", response_data)
                             break
-                        time.sleep(5)
-                    print("Errors")
-                except:
-                    print('Error')
+                        else:
+                            print("Empty JSON response received, retrying...")
+                    else:
+                        print(f"Received non-200 status code: {response.status_code}")
+                    
+                    time.sleep(5)
+                except requests.exceptions.RequestException as e:
+                    print(f'Request failed: {e}, retrying...')
                     time.sleep(5)
             
 
