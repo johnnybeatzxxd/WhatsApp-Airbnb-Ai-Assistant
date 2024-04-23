@@ -350,10 +350,11 @@ class llm:
                         print(response)
                         if response != {}:
                             break
+                        time.sleep(5)
                     print("Errors")
                 except:
                     print('Error')
                     time.sleep(5)
             
-        print(response["candidates"][0]["content"]["parts"][0]["text"])
+
         return response["candidates"][0]["content"]["parts"][0]["text"]
