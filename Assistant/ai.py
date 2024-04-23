@@ -302,12 +302,12 @@ class llm:
                 print(f'Request failed: {e}, retrying...')
                 time.sleep(5)
         
-        while "functionCall" in response["candidates"][0]["content"]["parts"][0]:
+        while "functionCall" in response_data["candidates"][0]["content"]["parts"][0]:
             
-            function_call = response["candidates"][0]["content"]["parts"][0]["functionCall"]
+            function_call = response_data["candidates"][0]["content"]["parts"][0]["functionCall"]
             function_name = function_call["name"]
 
-            function_response = self.function_call(response,_id)
+            function_response = self.function_call(response_data,_id)
             function_response_message = function_response["function_response"]
             function_response_image = function_response["image"]
             
@@ -371,4 +371,4 @@ class llm:
                     time.sleep(5)
             
 
-        return response["candidates"][0]["content"]["parts"][0]["text"]
+        return response_data["candidates"][0]["content"]["parts"][0]["text"]
