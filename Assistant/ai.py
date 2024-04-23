@@ -339,8 +339,7 @@ class llm:
                             },)
             messages.append({"role": "function",
                             "parts": functionResponse
-                                })
-            
+                                }) 
             while True:
                 try:
                     print("excution")
@@ -348,6 +347,7 @@ class llm:
                     if response.status_code == 200:
                         response = response.json()
                         print(response)
+                        print(response.status_code)
                         if response != {}:
                             break
                         time.sleep(5)
