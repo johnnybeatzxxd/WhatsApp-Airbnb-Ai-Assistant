@@ -193,7 +193,9 @@ class llm:
                 return {"function_response": properties["642919"][arg],"image":None}
                 
             except:
-                return {"function_response": 'Error: the information is in the description.',"image":None}
+                pass
+
+            return {"function_response": 'Error: the information is in the description.',"image":None}
                
 
         if function_name == "get_aminities_info": 
@@ -341,9 +343,11 @@ class llm:
             
             while True:
                 try:
+                    print("excution")
                     response = requests.post(url, headers=headers, json=data)
                     if response.status_code == 200:
                         response = response.json()
+                        print(response)
                         break
                     print("Errors")
                 except:
