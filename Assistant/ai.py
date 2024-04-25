@@ -361,12 +361,12 @@ class llm:
                             break
                         else:
                             print("Empty JSON response received, retrying...")
-                            print(functionResponse)
-                            functionResponse = messages[-1]["parts"]
-                            functionResponse.append({"text": "please generate a response"})
-                            print(functionResponse)
-                            messages[-1]["parts"] = functionResponse
-                            print(messages[-1])
+                            ask_response = {"role": "user",
+                                            "parts": [{"text": "??"}]
+                                            }
+                            if messages[-1] != ask_response:
+                                messages.append(ask_response)
+                                print(messages[-1])
                     else:
                         print(f"Received non-200 status code: {response.status_code}")
                     
